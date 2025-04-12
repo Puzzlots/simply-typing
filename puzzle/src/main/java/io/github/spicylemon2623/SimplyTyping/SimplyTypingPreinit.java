@@ -1,4 +1,4 @@
-package io.gtihub.spicylemon2623.SimplyTyping;
+package io.github.spicylemon2623.SimplyTyping;
 
 
 import com.github.puzzle.core.loader.provider.mod.entrypoint.impls.PreModInitializer;

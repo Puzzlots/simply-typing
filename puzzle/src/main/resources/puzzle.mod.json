@@ -13,10 +13,10 @@
   },
   "entrypoints": {
     "client_init": [
-      "io.github.spicylemon2623.SimplyZooming.SimplyTypingClient"
+      "io.github.spicylemon2623.SimplyTyping.SimplyTypingClient"
     ],
     "init": [
-      "io.github.spicylemon2623.SimplyZooming.SimplyTyping"
+      "io.github.spicylemon2623.SimplyTyping.SimplyTyping"
     ]
   },
   "mixins": [

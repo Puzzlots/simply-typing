@@ -1,4 +1,4 @@
-package io.gtihub.spicylemon2623.SimplyTyping;
+package io.github.spicylemon2623.SimplyTyping;
 
 import finalforeach.cosmicreach.util.Identifier;
 import org.apache.logging.log4j.LogManager;
