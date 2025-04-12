@@ -1,12 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.example.ExampleMod.mixins",
+  "package": "io.github.spicylemon2623.SimplyTyping.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "MainMenuMixin"
   ],
   "injectors": {
     "defaultRequire": 1

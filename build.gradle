@@ -42,7 +42,6 @@ subprojects {
                 "group": project.group,
                 "cosmic_reach_version": cosmic_reach_version,
                 "mod_name": mod_name,
-                "mod_developer": mod_developer,
                 "mod_id": mod_id,
                 "description": project.description,
                 "cosmic_quilt_version": cosmic_quilt_version,
@@ -59,7 +58,7 @@ subprojects {
 }
 
 tasks.register('buildAll') {
-    group = "ModMixer"
+    group = "SimplyTyping"
 
     dependsOn rootProject.project(':quilt').tasks.build
     dependsOn rootProject.project(':puzzle').tasks.buildMergedBundleJar
@@ -67,7 +66,7 @@ tasks.register('buildAll') {
 }
 
 tasks.register('cleanAll') {
-    group = "ModMixer"
+    group = "SimplyTyping"
 
     dependsOn rootProject.project(':quilt').tasks.clean
     dependsOn rootProject.project(':puzzle').tasks.clean

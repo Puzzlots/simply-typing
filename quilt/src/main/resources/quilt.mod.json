@@ -12,7 +12,7 @@
       "name": "${mod_name}",
       "description": "${description}",
       "contributors": {
-        "${mod_developer}": "Developer"
+        "${mod_developer}": "Spicylemon"
       },
 
 

@@ -27,5 +27,5 @@ buildscript() {
 include("puzzle")
 include("quilt")
 
-rootProject.name = 'ModMixer'
+rootProject.name = 'SimplyTyping'
 

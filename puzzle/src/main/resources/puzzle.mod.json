@@ -5,20 +5,18 @@
   "name": "${mod_name}",
   "description": "${description}",
   "authors": [
-    "${mod_developer}"
+    "Spicylemon",
+    "CrabKing"
   ],
   "meta": {
     "icon": "${mod_id}:icons/icon.png"
   },
   "entrypoints": {
     "client_init": [
-      "com.example.ExampleMod.ExampleModClient"
+      "io.github.spicylemon2623.SimplyZooming.SimplyTypingClient"
     ],
     "init": [
-      "com.example.ExampleMod.ExampleMod"
-    ],
-    "preInit": [
-      "com.example.ExampleMod.ExampleModPreinit"
+      "io.github.spicylemon2623.SimplyZooming.SimplyTyping"
     ]
   },
   "mixins": [
