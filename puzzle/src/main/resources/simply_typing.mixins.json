@@ -6,6 +6,10 @@
   "mixins": [
   ],
   "client": [
+    "ChatMenuMixin",
+    "ChatSenderMixin",
+    "InGameMixin",
+    "ControlsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

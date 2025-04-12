@@ -12,21 +12,22 @@
       "name": "${mod_name}",
       "description": "${description}",
       "contributors": {
-        "${mod_developer}": "Spicylemon"
+        "Spicylemon": "Developer",
+        "CrabKing": "Developer"
       },
 
 
       "contact": {
-        "homepage": "https://example.com/",
-        "issues": "https://codeberg.org/CRModders/cosmic-quilt-example/issues",
-        "sources": "https://codeberg.org/CRModders/cosmic-quilt-example/"
+        "homepage": "",
+        "issues": "https://github.com/Spicylemon2623/simply-typing/issues",
+        "sources": "https://github.com/Spicylemon2623/simply-typing/"
       },
 
       "icon": "assets/${mod_id}/icon.png"
     },
 
     "entrypoints": {
-      "init": "com.example.ExampleMod.ExampleMod"
+      "init": "io.github.spicylemon2623.SimplyTyping.SimplyTyping"
     },
 
     "depends": [

@@ -1,11 +1,15 @@
 package io.github.spicylemon2623.SimplyTyping;
 
-import com.github.puzzle.core.loader.launch.provider.mod.entrypoint.impls.ClientModInitializer;
+import dev.crmodders.cosmicquilt.api.entrypoint.ModInitializer;
+import org.quiltmc.loader.api.ModContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 
-public class SimplyTypingClient implements ClientModInitializer {
+public class SimplyTyping implements ModInitializer {
+    public static final Logger LOGGER = LoggerFactory.getLogger("Simply Zooming");
     public static boolean reload = true;
     public static boolean isCommand = false;
     public static boolean openWithSlash = false;
@@ -13,8 +17,8 @@ public class SimplyTypingClient implements ClientModInitializer {
     public static ArrayList<String> commands = new ArrayList<String>();
 
     @Override
-    public void onInit() {
-        Constants.LOGGER.info("Simply Typing Initialized!");
+    public void onInitialize(ModContainer mod) {
+        LOGGER.info("Simply Zooming Initialized!");
     }
 
     @Unique
