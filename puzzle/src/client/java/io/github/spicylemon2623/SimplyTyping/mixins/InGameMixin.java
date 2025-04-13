@@ -5,6 +5,7 @@ import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.chat.ChatMessage;
 import finalforeach.cosmicreach.gamestates.*;
 import finalforeach.cosmicreach.networking.client.ChatSender;
+import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
 import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,6 +27,7 @@ public class InGameMixin {
             ChatSender.sendMessageOrCommand(chat, ClientSingletons.ACCOUNT, inputText);
 
             ChatMessage message = chat.getLastMessage(0);
+            chat.clear();
             String text = message.messageText();
             String sender = message.getSenderName();
 

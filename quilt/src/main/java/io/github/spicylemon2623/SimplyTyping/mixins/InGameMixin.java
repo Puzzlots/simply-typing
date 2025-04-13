@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.github.spicylemon2623.SimplyTyping.SimplyTyping.LOGGER;
+
 @Mixin(InGame.class)
 public class InGameMixin {
 
@@ -26,6 +28,7 @@ public class InGameMixin {
             ChatSender.sendMessageOrCommand(chat, ClientSingletons.ACCOUNT, inputText);
 
             ChatMessage message = chat.getLastMessage(0);
+            chat.clear();
             String text = message.messageText();
             String sender = message.getSenderName();
 
