@@ -9,6 +9,7 @@ import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.HorizontalAnchor;
 import finalforeach.cosmicreach.ui.VerticalAnchor;
+import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
 import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -90,11 +91,8 @@ public class ChatMenuMixin extends GameState {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/badlogic/gdx/graphics/g2d/SpriteBatch;end()V", shift = At.Shift.BEFORE))
     private void render(CallbackInfo ci) {
-        if (isCommand){
-            Iterator<String> iterator = suggestions.iterator();
-
-            long msec = System.currentTimeMillis();
-
+        if (SimplyTypingClient.isCommand){
+            Iterator<String> iterator = SimplyTypingClient.suggestions.iterator();
 
             float y = 0;
             float x = 0;
@@ -154,11 +152,11 @@ public class ChatMenuMixin extends GameState {
             }
 
             if (Gdx.input.isKeyJustPressed(61)) {
-                if (!suggestions.isEmpty() && selected >= 0 && selected < suggestions.size()) {
+                if (!SimplyTypingClient.suggestions.isEmpty() && selected >= 0 && selected < SimplyTypingClient.suggestions.size()) {
                     inputText = "/";
-                    inputText = inputText.concat(suggestions.get(selected) + " ");
+                    inputText = inputText.concat(SimplyTypingClient.suggestions.get(selected));
                     desiredCharIdx = inputText.length();
-                    suggestions.clear();
+                    SimplyTypingClient.suggestions.clear();
                 }
             }
         }

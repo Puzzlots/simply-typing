@@ -1,5 +1,6 @@
 package io.github.spicylemon2623.SimplyTyping;
 
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.github.puzzle.core.loader.launch.provider.mod.entrypoint.impls.ClientModInitializer;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -15,6 +16,7 @@ public class SimplyTypingClient implements ClientModInitializer {
     @Override
     public void onInit() {
         Constants.LOGGER.info("Simply Typing Initialized!");
+        Lwjgl3Application.setGLDebugMessageControl(Lwjgl3Application.GLDebugMessageSeverity.MEDIUM,false);
     }
 
     @Unique

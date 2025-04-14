@@ -1,43 +1,36 @@
 package io.github.spicylemon2623.SimplyTyping.mixins;
 
-import finalforeach.cosmicreach.ClientSingletons;
-import finalforeach.cosmicreach.chat.Chat;
-import finalforeach.cosmicreach.chat.ChatMessage;
+import com.github.puzzle.game.commands.CommandManager;
+import com.github.puzzle.game.commands.ServerCommandSource;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.CommandNode;
 import finalforeach.cosmicreach.gamestates.*;
-import finalforeach.cosmicreach.networking.client.ChatSender;
-import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
+import io.github.spicylemon2623.SimplyTyping.Constants;
 import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Mixin(InGame.class)
-public class InGameMixin {
+public abstract class InGameMixin {
 
     @Inject(method = "onSwitchTo",at = @At("TAIL"))
     public void onSwitchTo(CallbackInfo ci) {
         if (SimplyTypingClient.reload){
             SimplyTypingClient.clearCommands();
-            Chat chat = Chat.MAIN_CLIENT_CHAT;
-            String inputText = "/?";
-            ChatSender.sendMessageOrCommand(chat, ClientSingletons.ACCOUNT, inputText);
+            CommandManager.initCommands();
 
-            ChatMessage message = chat.getLastMessage(0);
-            chat.clear();
-            String text = message.messageText();
-            String sender = message.getSenderName();
+            CommandNode<ServerCommandSource> root = CommandManager.DISPATCHER.getRoot();
+            Constants.LOGGER.info("Empty: {}", root.getChildren().isEmpty());
 
-            if (sender == null) {
-                Pattern pattern = Pattern.compile("/(\\w+)");
-                Matcher matcher = pattern.matcher(text);
-                while (matcher.find()) {
-                    SimplyTypingClient.commands.add(matcher.group(1));
-                }
+
+
+            for (CommandNode<ServerCommandSource> child : root.getChildren()) {
+                SimplyTypingClient.commands.add(child.getName());
+                Constants.LOGGER.info(child.getName());
             }
+
         }
     }
 
