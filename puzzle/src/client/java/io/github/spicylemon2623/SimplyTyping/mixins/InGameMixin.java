@@ -2,7 +2,6 @@ package io.github.spicylemon2623.SimplyTyping.mixins;
 
 import com.github.puzzle.game.commands.CommandManager;
 import com.github.puzzle.game.commands.ServerCommandSource;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import finalforeach.cosmicreach.gamestates.*;
 import io.github.spicylemon2623.SimplyTyping.Constants;
