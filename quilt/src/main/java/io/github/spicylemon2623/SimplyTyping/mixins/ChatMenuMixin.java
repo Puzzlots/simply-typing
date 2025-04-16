@@ -9,7 +9,7 @@ import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.HorizontalAnchor;
 import finalforeach.cosmicreach.ui.VerticalAnchor;
-import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
+import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,10 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 import static finalforeach.cosmicreach.gamestates.ChatMenu.minY;
-import static io.github.spicylemon2623.SimplyTyping.SimplyTyping.*;
+import static io.github.spicylemon2623.SimplyTyping.SimplyTypingClient.*;
 
 @Mixin(ChatMenu.class)
 public class ChatMenuMixin extends GameState {
@@ -34,14 +33,17 @@ public class ChatMenuMixin extends GameState {
     int desiredCharIdx;
 
     @Unique
-    int selected = 0;
+    int simplyTyping$selected = 0;
+
+    @Unique
+    int simplyTyping$suggestionSize = 0;
 
     @Inject(method = "keyTyped",at = @At("TAIL"))
     public void keyTyped(char character, CallbackInfoReturnable<Boolean> cir){
         suggestions.clear();
         MakeSuggestions(inputText);
         if (!(character == '\t')){
-            selected = 0;
+            simplyTyping$selected = 0;
         }
     }
 
@@ -50,27 +52,17 @@ public class ChatMenuMixin extends GameState {
         suggestions.clear();
         MakeSuggestions(inputText);
         if (!(character == '\t')){
-            selected = 0;
+            simplyTyping$selected = 0;
         }
     }
 
     @Inject(method = "updateRepeatMessageIdx", at = @At("HEAD"), cancellable = true)
     public void updateRepeatMessageIdxHead(int offset, CallbackInfo ci){
-        if (offset == -1){ // down
-            if (selected >= 0){
-                selected -= 1;
+        if (offset == -1 || offset == 1) {
+            simplyTyping$selected += offset;
+            simplyTyping$selected = Math.max(0, Math.min(simplyTyping$selected, simplyTyping$suggestionSize - 1));
+            if (offset == -1 || simplyTyping$selected > 0) {
                 ci.cancel();
-            } else {
-                selected -= 1;
-            }
-        }
-
-        if (offset == 1){ // up
-            if (selected > 0){
-                selected += 1;
-                ci.cancel();
-            } else {
-                selected += 1;
             }
         }
     }
@@ -82,78 +74,96 @@ public class ChatMenuMixin extends GameState {
     }
 
     @Unique
-    public boolean isSelected(int suggestionsIdx){
-        return selected == suggestionsIdx;
+    public boolean simplyTyping$isSelected(int suggestionsIdx){
+        return simplyTyping$selected == suggestionsIdx;
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/badlogic/gdx/graphics/g2d/SpriteBatch;end()V", shift = At.Shift.BEFORE))
     private void render(CallbackInfo ci) {
-        if (isCommand){
-            Iterator<String> iterator = suggestions.iterator();
+        if (SimplyTypingClient.isCommand) {
+            Iterator<String> iterator = SimplyTypingClient.suggestions.iterator();
 
-            float y = 0;
-            float x = 0;
+            simplyTyping$suggestionSize = suggestions.size();
 
-            Vector2 tmpVec = new Vector2();
+            float sugY = 0;
+            float selY = 0;
+            float selX = 0;
+            float sugX = 0;
+
+            Vector2 preSelectedVec = new Vector2();
             Vector2 suggestionsVec = new Vector2();
             Vector2 suggestionVec = new Vector2();
 
-            FontRenderer.getTextDimensions(this.uiViewport, "> "+inputText, tmpVec);
-            FontRenderer.getTextDimensions(this.uiViewport, "> /", suggestionsVec);
+            FontRenderer.getTextDimensions(this.uiViewport, "> " + inputText, preSelectedVec);
 
+            String preSelectedTextToRender = " ";
 
             int suggestionsIdx = 0;
+            String selectedTextToRender = null;
             while (iterator.hasNext()) {
+                String suggestionTextToRender = iterator.next();
 
-                String textToRender = iterator.next();
-                FontRenderer.getTextDimensions(this.uiViewport, textToRender, suggestionVec);
-                String modifiedTextToRender = textToRender;
-
-                if (suggestionsIdx == 0 && inputText.length() - 1 > -1) {  //if it's the first suggestion
-                    modifiedTextToRender = textToRender.substring(inputText.length() - 1);
-                    x = tmpVec.x;
+                if (suggestionsIdx == simplyTyping$selected) {
+                    preSelectedTextToRender = suggestionTextToRender;
                 }
 
-                if (suggestionsIdx != 0) {  //if it's not the first suggestion ignore the x offset
-                    x = suggestionsVec.x;
+                FontRenderer.getTextDimensions(this.uiViewport, suggestionTextToRender, suggestionVec);
+
+                selectedTextToRender = " ";
+                selectedTextToRender = preSelectedTextToRender.substring(inputText.length() - 1);
+
+
+                selX = preSelectedVec.x;
+
+
+                //get position for suggestions
+                String suggestionsPos = "/"+(inputText.trim().contains(" ") ? inputText.trim().substring(0, inputText.trim().lastIndexOf(' ') + 1) : "/");
+                FontRenderer.getTextDimensions(this.uiViewport, suggestionsPos, suggestionsVec);
+                sugX = suggestionsVec.x;
+
+
+                if (suggestionsIdx == 0) {  //if it's the first run
+                    sugY -= preSelectedVec.y;
+
+                    /* Botch job because p's are weird */
+                    if (inputText.contains("p")) {
+                        selY -= 1f;
+                    }
+                    if (selectedTextToRender.contains("p")) {
+                        selY += 1.5f;
+                    }
                 }
 
-                if (Objects.equals(inputText, "/") && suggestionsIdx == 0) {  //if the user hasn't started typing the command don't show the first suggestion in the text bar
-                    y -= suggestionVec.y;
-                }
-
-                /* Botch job because p's are weird */
-                if (inputText.contains("p")) {
-                    y -= 1f;
-                }
-
-                if (modifiedTextToRender.contains("p")) {
-                    y += 1.5f;
-                }
-
-                batch.setColor(1.0F, 1.0F, 1.0F, 1.0F);  //colour set
-                if (isSelected(suggestionsIdx)){
+                batch.setColor(1.0F, 1.0F, 1.0F, 1.0F);  //set colour to white
+                if (simplyTyping$isSelected(suggestionsIdx)) {
                     batch.setColor(Color.YELLOW);
                 }
 
-
+                // draw suggestions
                 Chat.MAIN_CLIENT_CHAT.clear();
-                batch.setColor(batch.getColor().add(-0.75f,-0.75f,-0.75f,0)); //make text darker
-                FontRenderer.drawText(batch, this.uiViewport, modifiedTextToRender, 10f + x, minY - 10.0F + y, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw darker text
+                batch.setColor(batch.getColor().add(-0.75f, -0.75f, -0.75f, 0)); //make text darker
+                FontRenderer.drawText(batch, this.uiViewport, suggestionTextToRender, 10f + sugX, minY - 10.0F + sugY, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw darker text
+                batch.setColor(batch.getColor().add(0.75f, 0.75f, 0.75f, 0));  //set colour back to normal
+                FontRenderer.drawText(batch, this.uiViewport, suggestionTextToRender, 8.0F + sugX, minY - 12.0F + sugY, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw normal text on-top
 
-                batch.setColor(batch.getColor().add(0.75f,0.75f,0.75f,0));  //set colour back to normal
-                FontRenderer.drawText(batch, this.uiViewport, modifiedTextToRender, 8.0F + x, minY - 12.0F + y, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw normal text on-top
-
-                suggestionsIdx ++;
-                y -= suggestionVec.y +2f;
+                suggestionsIdx++;
+                sugY -= suggestionVec.y + 2f;
             }
 
+            //draw selected
+            batch.setColor(Color.SLATE);
+            batch.setColor(batch.getColor().add(-0.25f, -0.25f, -0.25f, 0)); //make text darker
+            FontRenderer.drawText(batch, this.uiViewport, selectedTextToRender, 10f + selX, minY - 10.0F + selY, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw darker text
+            batch.setColor(batch.getColor().add(0.25f, 0.25f, 0.25f, 0));  //set colour back to normal
+            FontRenderer.drawText(batch, this.uiViewport, selectedTextToRender, 8.0F + selX, minY - 12.0F + selY, HorizontalAnchor.LEFT_ALIGNED, VerticalAnchor.BOTTOM_ALIGNED); //draw normal text on-top
+
+
             if (Gdx.input.isKeyJustPressed(61)) {
-                if (!suggestions.isEmpty() && selected >= 0 && selected < suggestions.size()) {
+                if (!SimplyTypingClient.suggestions.isEmpty() && simplyTyping$selected >= 0 && simplyTyping$selected < SimplyTypingClient.suggestions.size()) {
                     inputText = "/";
-                    inputText = inputText.concat(suggestions.get(selected));
+                    inputText = inputText.concat(SimplyTypingClient.suggestions.get(simplyTyping$selected));
                     desiredCharIdx = inputText.length();
-                    suggestions.clear();
+                    SimplyTypingClient.suggestions.clear();
                 }
             }
         }
@@ -167,8 +177,8 @@ public class ChatMenuMixin extends GameState {
 
     @Override
     public void onSwitchTo() {
-        if (SimplyTyping.openWithSlash){
-            SimplyTyping.openWithSlash = false;
+        if (SimplyTypingClient.openWithSlash){
+            SimplyTypingClient.openWithSlash = false;
             inputText = "/";
             desiredCharIdx += 1;
             suggestions.clear();

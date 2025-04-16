@@ -10,8 +10,8 @@ public class SimplyTypingClient implements ClientModInitializer {
     public static boolean reload = true;
     public static boolean isCommand = false;
     public static boolean openWithSlash = false;
-    public static ArrayList<String> suggestions = new ArrayList<String>();
-    public static ArrayList<String> commands = new ArrayList<String>();
+    public static ArrayList<String> suggestions = new ArrayList<>();
+    public static ArrayList<String> commands = new ArrayList<>();
 
     @Override
     public void onInit() {
@@ -21,7 +21,7 @@ public class SimplyTypingClient implements ClientModInitializer {
 
     @Unique
     public static void MakeSuggestions(String inputText){
-        if (inputText.startsWith("/")){
+        if (inputText.startsWith("/") && !inputText.equals("/")){
             isCommand = true;
             for (String each : commands) {
                 if (each.startsWith(inputText.replaceFirst("/",""))) {

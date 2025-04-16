@@ -1,5 +1,6 @@
 package io.github.spicylemon2623.SimplyTyping;
 
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import dev.crmodders.cosmicquilt.api.entrypoint.ModInitializer;
 import org.quiltmc.loader.api.ModContainer;
 import org.slf4j.Logger;
@@ -8,7 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 
-public class SimplyTyping implements ModInitializer {
+public class SimplyTypingClient implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Simply Zooming");
     public static boolean reload = true;
     public static boolean isCommand = false;
@@ -19,6 +20,7 @@ public class SimplyTyping implements ModInitializer {
     @Override
     public void onInitialize(ModContainer mod) {
         LOGGER.info("Simply Zooming Initialized!");
+        Lwjgl3Application.setGLDebugMessageControl(Lwjgl3Application.GLDebugMessageSeverity.MEDIUM,false);
     }
 
     @Unique

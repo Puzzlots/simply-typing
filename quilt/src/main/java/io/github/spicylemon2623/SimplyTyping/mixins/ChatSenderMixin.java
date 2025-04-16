@@ -3,7 +3,7 @@ package io.github.spicylemon2623.SimplyTyping.mixins;
 import finalforeach.cosmicreach.accounts.Account;
 import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.networking.client.ChatSender;
-import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
+import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,8 +16,8 @@ public class ChatSenderMixin {
     private static void sendMessageOrCommand(Chat chat, Account account, String messageText, CallbackInfo ci){
         if (messageText != null && !messageText.isEmpty()) {
             if (messageText.equalsIgnoreCase("/reload") || messageText.equalsIgnoreCase("/reload ")) {
-                SimplyTyping.reload = true;
-                SimplyTyping.clearCommands();
+                SimplyTypingClient.reload = true;
+                SimplyTypingClient.clearCommands();
                 ci.cancel();
             }
         }

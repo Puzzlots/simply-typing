@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.function.Supplier;
+
+
 @Mixin(InGame.class)
 public abstract class InGameMixin {
 
@@ -21,13 +24,14 @@ public abstract class InGameMixin {
             CommandManager.initCommands();
 
             CommandNode<ServerCommandSource> root = CommandManager.DISPATCHER.getRoot();
-            Constants.LOGGER.info("Empty: {}", root.getChildren().isEmpty());
-
 
 
             for (CommandNode<ServerCommandSource> child : root.getChildren()) {
                 SimplyTypingClient.commands.add(child.getName());
-                Constants.LOGGER.info(child.getName());
+
+                String base = child.getName();
+                String text = ("Loaded: "+base);
+                Constants.LOGGER.info(text);
             }
 
         }

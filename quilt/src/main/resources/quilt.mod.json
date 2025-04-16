@@ -27,7 +27,7 @@
     },
 
     "entrypoints": {
-      "init": "io.github.spicylemon2623.SimplyTyping.SimplyTyping"
+      "init": "io.github.spicylemon2623.SimplyTyping.SimplyTypingClient"
     },
 
     "depends": [

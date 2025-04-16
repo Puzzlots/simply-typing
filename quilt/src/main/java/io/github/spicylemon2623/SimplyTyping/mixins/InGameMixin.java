@@ -5,7 +5,7 @@ import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.chat.ChatMessage;
 import finalforeach.cosmicreach.gamestates.*;
 import finalforeach.cosmicreach.networking.client.ChatSender;
-import io.github.spicylemon2623.SimplyTyping.SimplyTyping;
+import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,15 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.github.spicylemon2623.SimplyTyping.SimplyTyping.LOGGER;
-
 @Mixin(InGame.class)
 public class InGameMixin {
 
     @Inject(method = "onSwitchTo",at = @At("TAIL"))
     public void onSwitchTo(CallbackInfo ci) {
-        if (SimplyTyping.reload){
-            SimplyTyping.clearCommands();
+        if (SimplyTypingClient.reload){
+            SimplyTypingClient.clearCommands();
             Chat chat = Chat.MAIN_CLIENT_CHAT;
             String inputText = "/?";
             ChatSender.sendMessageOrCommand(chat, ClientSingletons.ACCOUNT, inputText);
@@ -36,7 +34,7 @@ public class InGameMixin {
                 Pattern pattern = Pattern.compile("/(\\w+)");
                 Matcher matcher = pattern.matcher(text);
                 while (matcher.find()) {
-                    SimplyTyping.commands.add(matcher.group(1));
+                    SimplyTypingClient.commands.add(matcher.group(1));
                 }
             }
         }
@@ -45,10 +43,10 @@ public class InGameMixin {
     @Inject(method = "switchAwayTo",at = @At("TAIL"))
     public void switchAwayTo(GameState gameState, CallbackInfo ci) {
         if ((gameState instanceof PauseMenu) || (gameState instanceof LoadingGame) || (gameState instanceof YouDiedMenu) || (gameState instanceof ChatMenu)){
-            SimplyTyping.reload = false;
+            SimplyTypingClient.reload = false;
         } else {
-            SimplyTyping.reload = true;
-            SimplyTyping.clearCommands();
+            SimplyTypingClient.reload = true;
+            SimplyTypingClient.clearCommands();
         }
     }
 }
