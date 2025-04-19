@@ -3,7 +3,6 @@ package io.github.spicylemon2623.SimplyTyping.mixins;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.gamestates.ChatMenu;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.ui.FontRenderer;
