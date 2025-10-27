@@ -1,23 +1,16 @@
 package io.github.spicylemon2623.SimplyTyping;
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.github.puzzle.core.loader.launch.provider.mod.entrypoint.impls.ClientModInitializer;
+import dev.puzzleshq.puzzleloader.loader.mod.entrypoint.client.ClientModInit;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 
-public class SimplyTypingClient implements ClientModInitializer {
+public abstract class SimplyTypingClient implements ClientModInit {
     public static boolean reload = true;
     public static boolean isCommand = false;
     public static boolean openWithSlash = false;
     public static ArrayList<String> suggestions = new ArrayList<>();
     public static ArrayList<String> commands = new ArrayList<>();
-
-    @Override
-    public void onInit() {
-        Constants.LOGGER.info("Simply Typing Initialized!");
-        Lwjgl3Application.setGLDebugMessageControl(Lwjgl3Application.GLDebugMessageSeverity.MEDIUM,false);
-    }
 
     @Unique
     public static void MakeSuggestions(String inputText){
