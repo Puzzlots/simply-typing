@@ -143,7 +143,7 @@ public class ChatMenuMixin extends GameState {
                     if (suggestionsIdx == 0) {  //if it's the first run
                         sugY -= preSelectedVec.y;
 
-                        /* Botch job because p's are weird */
+                        /* Botch job because p's are strange */
                         if (inputText.contains("p")) {
                             selY -= 1f;
                         }

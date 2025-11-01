@@ -1,9 +1,9 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 3,
+  "display-name": "${mod_name}",
   "id": "${mod_id}",
   "version": "${mod_version}",
-  "name": "${mod_name}",
-  "description": "${description}",
+  "description": "${mod_desc}",
   "authors": [
     "Spicylemon",
     "CrabKing"
@@ -11,20 +11,14 @@
   "meta": {
     "icon": "${mod_id}:icons/icon.png"
   },
-  "entrypoints": {
-    "client_init": [
-      "io.github.spicylemon2623.SimplyTyping.SimplyTypingClient"
-    ],
-    "init": [
-      "io.github.spicylemon2623.SimplyTyping.SimplyTyping"
-    ]
-  },
+  "entrypoints": {},
   "mixins": [
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "cosmic-reach": ">=${cosmic_reach_version}",
-    "puzzle-loader": ">=${puzzle_loader_version}"
+    "cosmic-reach": ">=${cosmic_reach_minimum}",
+    "puzzle-loader-cosmic": ">=${puzzle_loader_cosmic}",
+    "puzzle-loader-core": ">=${puzzle_loader_core}"
   },
   "accessManipulator": "${mod_id}.manipulator"
 }

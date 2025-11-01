@@ -1,15 +1,18 @@
 package io.github.spicylemon2623.SimplyTyping.mixins;
 
-import com.github.puzzle.game.commands.CommandManager;
-import com.github.puzzle.game.commands.ServerCommandSource;
-import com.mojang.brigadier.tree.CommandNode;
+import finalforeach.cosmicreach.ClientSingletons;
+import finalforeach.cosmicreach.chat.Chat;
+import finalforeach.cosmicreach.chat.ChatMessage;
 import finalforeach.cosmicreach.gamestates.*;
-import io.github.spicylemon2623.SimplyTyping.Constants;
+import finalforeach.cosmicreach.networking.client.ChatSender;
 import io.github.spicylemon2623.SimplyTyping.SimplyTypingClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Mixin(InGame.class)
 public abstract class InGameMixin {
@@ -18,21 +21,42 @@ public abstract class InGameMixin {
     public void onSwitchTo(CallbackInfo ci) {
         if (SimplyTypingClient.reload){
             SimplyTypingClient.clearCommands();
-            CommandManager.initCommands();
+            Chat chat = Chat.MAIN_CLIENT_CHAT;
+            String inputText = "/?";
+            ChatSender.sendMessageOrCommand(chat, ClientSingletons.ACCOUNT, inputText);
 
-            CommandNode<ServerCommandSource> root = CommandManager.DISPATCHER.getRoot();
+            ChatMessage message = chat.getLastMessage(0);
+            chat.clear();
+            String text = message.messageText();
+            String sender = message.getSenderName();
 
-
-            for (CommandNode<ServerCommandSource> child : root.getChildren()) {
-                SimplyTypingClient.commands.add(child.getName());
-
-                String base = child.getName();
-                String text = ("Loaded: "+base);
-                Constants.LOGGER.info(text);
+            if (sender == null) {
+                Pattern pattern = Pattern.compile("/(\\w+)");
+                Matcher matcher = pattern.matcher(text);
+                while (matcher.find()) {
+                    SimplyTypingClient.commands.add(matcher.group(1));
+                }
             }
-
         }
     }
+//    public void onSwitchTo(CallbackInfo ci) {
+//        if (SimplyTypingClient.reload){
+//            SimplyTypingClient.clearCommands();
+////            CommandManager.initCommands();
+////
+////            CommandNode<ServerCommandSource> root = CommandManager.DISPATCHER.getRoot();
+////
+////
+////            for (CommandNode<ServerCommandSource> child : root.getChildren()) {
+////                SimplyTypingClient.commands.add(child.getName());
+////
+////                String base = child.getName();
+////                String text = ("Loaded: "+base);
+////                Constants.LOGGER.info(text);
+////            }
+//
+//        }
+//    }
 
     @Inject(method = "switchAwayTo",at = @At("TAIL"))
     public void switchAwayTo(GameState gameState, CallbackInfo ci) {
